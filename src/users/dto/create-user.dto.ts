@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { Role } from "src/roles/entities/role.entity";
+
 
 export class CreateUserDto {
     
@@ -26,5 +26,6 @@ export class CreateUserDto {
     @IsNumber()
     height:number
 
-    roleId:Role
+    @IsNumber()
+    roleId:number
 }

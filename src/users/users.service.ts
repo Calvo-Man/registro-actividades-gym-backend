@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { RolesService } from 'src/roles/roles.service';
-//import { Role } from 'src/roles/entities/role.entity';
+
 
 @Injectable()
 export class UsersService {
@@ -28,19 +28,53 @@ export class UsersService {
     return await this.userRepository.save(user)
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    const findUsers = await this.userRepository.find(
+      {relations:['role']}
+    )
+
+    if(findUsers.length === 0){
+      throw new NotFoundException('Not users found')
+    }
+
+    return findUsers;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+   async findOne(id: number) {
+    const findUser = await this.userRepository.findOne(
+      {where:{id},relations:['role']}
+    )
+
+    if(!findUser){
+      throw new NotFoundException(`User with ID ${id} not found`)
+    }
+
+    return findUser;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const role = await this.rolesService.findOne(updateUserDto.roleId);
+    if(!role){
+      throw new NotFoundException(`Rol with ID ${id} not found`)
+    };
+
+    const user = await this.userRepository.preload(
+      {
+        id,
+        ...updateUserDto,
+        role
+      }
+    );
+
+    return await this.userRepository.save(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const findUser = await this.findOne(id);
+
+    if(!findUser){
+      throw new NotFoundException(`User with ID ${id} not found`)
+    }
+    return await this.userRepository.delete(id)
   }
 }
