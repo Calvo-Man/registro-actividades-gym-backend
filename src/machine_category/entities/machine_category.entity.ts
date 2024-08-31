@@ -7,9 +7,9 @@ export class MachineCategory {
     @PrimaryGeneratedColumn()
     id:number
 
-    @Column()
+    @Column({unique:true,nullable:false})
     category:string
 
     @OneToMany(()=>Machine,(machine)=>machine.machineCategory)
-    machines:Machine
+    machine:Machine
 }

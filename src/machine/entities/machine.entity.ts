@@ -18,6 +18,6 @@ export class Machine {
     @OneToMany(()=>Activity,(activity)=>activity.machine)
     activities:Activity[]
 
-    @ManyToOne(()=>MachineCategory,(machineCategory)=>machineCategory.machines)
+    @ManyToOne(()=>MachineCategory,(machineCategory)=>machineCategory.machine)
     machineCategory:MachineCategory
 }

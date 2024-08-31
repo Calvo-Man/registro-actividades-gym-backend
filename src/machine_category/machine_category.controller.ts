@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { MachineCategoryService } from './machine_category.service';
 import { CreateMachineCategoryDto } from './dto/create-machine_category.dto';
