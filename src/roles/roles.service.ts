@@ -20,7 +20,7 @@ export class RolesService {
     return  await this.roleRepository.find({relations:['users']});
   }
 
-  async findOne(id: number) {
+  async findOne(id:number) {
     return await this.roleRepository.findOne({
       where:{id},
       relations:['users'],
