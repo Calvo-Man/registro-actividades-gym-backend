@@ -1,42 +1,56 @@
 /* eslint-disable prettier/prettier */
-import { Activity } from "src/activities/entities/activity.entity";
-import { Role } from "src/roles/entities/role.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import moment from 'moment-timezone';
+import { Activity } from 'src/activities/entities/activity.entity';
+import { Role } from 'src/roles/entities/role.entity';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ unique: true, nullable: false })
-    email:string
+  @Column({ unique: true, nullable: false })
+  email: string;
 
-    @Column({nullable:false})
-    password: string;
+  @Column({ nullable: false })
+  password: string;
 
-    @Column()
-    name:string
+  @Column()
+  name: string;
 
-    @Column()
-    age:number
+  @Column()
+  age: number;
 
-    @Column()
-    weight:number
+  @Column()
+  weight: number;
 
-    @Column()
-    height:number
+  @Column()
+  height: number;
 
-    @CreateDateColumn({ type: 'timestamp' }) // Columna que registra la fecha y hora de creación
-    createdAt: Date;
+  @CreateDateColumn({
+    type: 'timestamp',
+  })
+  createdAt: Date;
+  @BeforeInsert()
+  setCreatedAt() {
+    // Configura la zona horaria a la que quieres convertir
+    this.createdAt = moment().tz('America/Bogota').toDate();
+  }
+  @DeleteDateColumn({ type: 'timestamp' })
+  deletedAt: Date;
 
-    @DeleteDateColumn({type:'timestamp'})
-    deletedAt: Date;
+  @ManyToOne(() => Role, (role) => role.users)
+  role: Role;
 
-    @ManyToOne(()=>Role,(role)=>role.users)
-    role:Role
-
-    @OneToMany(()=>Activity,(activity)=>activity.user)
-    activities:Activity[]
-
-
+  @OneToMany(() => Activity, (activity) => activity.user)
+  activities: Activity[];
 }

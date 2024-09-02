@@ -2,7 +2,7 @@
 
 import { Machine } from "src/machine/entities/machine.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Activity {
@@ -19,11 +19,11 @@ export class Activity {
     @Column()
     lifted_weight:number
 
-    @CreateDateColumn({ type: 'timestamp' }) // Columna que registra la fecha y hora de creación
+    @Column() // Columna que registra la fecha y hora de creación
     start_date: Date;
 
-    @UpdateDateColumn({type:'timestamp'})
-    end_date:number;
+    @Column()
+    end_date:Date;
 
     @ManyToOne(()=>User,(user)=>user.activities)
     user:User
