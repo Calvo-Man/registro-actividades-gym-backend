@@ -15,17 +15,7 @@ export class UsersService {
     private rolesService:RolesService,
   ){}
   async create(createUserDto: CreateUserDto) {
-    const role = await this.rolesService.findOne(createUserDto.roleId)
-    if(!role){
-      throw new NotFoundException( `Rol with ID ${createUserDto.roleId} not found `)
-    }
-
-    const user =  this.userRepository.create({
-      ...createUserDto,
-      role,
-    })
-
-    return await this.userRepository.save(user)
+    return await this.userRepository.save(createUserDto);
   }
 
   async findAll() {
@@ -50,6 +40,10 @@ export class UsersService {
     }
 
     return findUser;
+  }
+
+  async findOneByEmail(email: string) {
+    return await this.userRepository.findOneBy({ email });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

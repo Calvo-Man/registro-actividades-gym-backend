@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { MachineCategoryModule } from './machine_category/machine_category.module';
 import { MachineModule } from './machine/machine.module';
+import { AuthModule } from './auth/auth.module'
 
 
 @Module({
@@ -28,6 +29,7 @@ import { MachineModule } from './machine/machine.module';
     ActivitiesModule,
     MachineCategoryModule,
     MachineModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
