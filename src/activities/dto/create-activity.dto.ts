@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import {IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateActivityDto {
 
@@ -16,10 +17,12 @@ export class CreateActivityDto {
     lifted_weight: number;
 
     @IsNotEmpty()
+    @Type(() => Date)
     @IsDate()
     start_date: Date;
 
     @IsNotEmpty()
+    @Type(() => Date)
     @IsDate()
     end_date:Date;
 

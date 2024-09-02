@@ -16,6 +16,7 @@ export class ActivitiesService {
     private useService:UsersService
   ){}
   async create(createActivityDto: CreateActivityDto) {
+    
     const machine = await this.machineService.findOne(createActivityDto.machineId)
     if(!machine){
       throw new NotFoundException(`Machine with ${createActivityDto.machineId} not found`)

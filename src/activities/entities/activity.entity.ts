@@ -19,10 +19,10 @@ export class Activity {
     @Column()
     lifted_weight:number
 
-    @Column() // Columna que registra la fecha y hora de creación
+    @Column({type:"datetime"}) // Columna que registra la fecha y hora de creación
     start_date: Date;
 
-    @Column()
+    @Column({type:"datetime"})
     end_date:Date;
 
     @ManyToOne(()=>User,(user)=>user.activities)
