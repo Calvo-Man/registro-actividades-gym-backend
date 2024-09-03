@@ -10,6 +10,8 @@ import { MachineCategoryModule } from './machine_category/machine_category.modul
 import { MachineModule } from './machine/machine.module';
 import { AuthModule } from './auth/auth.module'
 
+import { ExercisesModule } from './exercises/exercises.module';
+
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { AuthModule } from './auth/auth.module'
     MachineCategoryModule,
     MachineModule,
     AuthModule,
+    ExercisesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

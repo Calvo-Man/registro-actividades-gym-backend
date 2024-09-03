@@ -26,6 +26,10 @@ export class CreateActivityDto {
     @IsDate()
     end_date:Date;
 
+    
+    @IsNumber()
+    Duration:number;
+
     @IsNotEmpty()
     @IsNumber()
     userId: number;
@@ -33,4 +37,8 @@ export class CreateActivityDto {
     @IsNotEmpty()
     @IsNumber()
     machineId: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    exerciseId: number;
 }

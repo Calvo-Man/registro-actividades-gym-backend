@@ -6,12 +6,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Machine } from './entities/machine.entity';
 import { MachineCategoryModule } from 'src/machine_category/machine_category.module';
 
+
 @Module({
   imports:[
     TypeOrmModule.forFeature([
       Machine
     ]),
-    MachineCategoryModule
+    MachineCategoryModule,
+   
   ],
   controllers: [MachineController],
   providers: [MachineService],

@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { Exercise } from "src/exercises/entities/exercise.entity";
 import { Machine } from "src/machine/entities/machine.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -11,5 +12,10 @@ export class MachineCategory {
     category:string
 
     @OneToMany(()=>Machine,(machine)=>machine.machineCategory)
-    machine:Machine
+    machine:Machine[]
+
+    @OneToMany(()=>Exercise,(exercise)=>exercise.machineCategory)
+    exercise:Exercise[]
+
+    
 }
