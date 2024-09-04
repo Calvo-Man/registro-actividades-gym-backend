@@ -1,10 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Activity } from './entities/activity.entity';
-import { Repository } from 'typeorm';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { MachineService } from 'src/machine/machine.service';
 import { UsersService } from 'src/users/users.service';
 import { ExercisesService } from 'src/exercises/exercises.service';
@@ -24,7 +28,7 @@ export class ActivitiesService {
     );
     if (!machine) {
       throw new NotFoundException(
-        `Machine with ${createActivityDto.machineId} not found`,
+        `Machine with ID ${createActivityDto.machineId} not found`,
       );
     }
 
@@ -42,11 +46,33 @@ export class ActivitiesService {
       throw new NotFoundException(`This user does not exist`);
     }
 
+    const startDate = new Date(createActivityDto.start_date);
+    const endDate = new Date(createActivityDto.end_date);
+    const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+    const diffHours = diffTime / (1000 * 60);
+
+    // console.log('Time Difference:', diffTime / (1000 * 60), ' minutes');
+
+    const findDisponibilty = await this.activityRepository.findOne({
+      where: {
+        machine: machine,
+        start_date: LessThanOrEqual(endDate),
+        end_date: MoreThanOrEqual(startDate),
+      },
+    });
+
+    if (findDisponibilty) {
+      throw new ConflictException(
+        `You cannot create an activity with this machine ID: ${createActivityDto.machineId} - ${machine.name} because it was being used at this date`,
+      );
+    }
+
     const activity = this.activityRepository.create({
       ...createActivityDto,
       machine,
       exercise,
       user,
+      duration: diffHours, // Set the duration here instead of modifying the DTO
     });
 
     return this.activityRepository.save(activity);

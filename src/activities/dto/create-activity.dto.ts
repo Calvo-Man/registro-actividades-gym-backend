@@ -1,12 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
-import {IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import {IsDate, IsNotEmpty, IsNumber } from "class-validator";
 
 export class CreateActivityDto {
 
-    @IsNotEmpty()
-    @IsString() 
-    name: string;
+    
     
     @IsNotEmpty()
     @IsNumber()
@@ -27,8 +25,7 @@ export class CreateActivityDto {
     end_date:Date;
 
     
-    @IsNumber()
-    Duration:number;
+    
 
     @IsNotEmpty()
     @IsNumber()

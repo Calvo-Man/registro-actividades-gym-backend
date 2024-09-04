@@ -11,8 +11,12 @@ export class Activity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    name: string;
+    
+    @ManyToOne(()=>Exercise,(exercise)=>exercise.activity)
+    exercise:Exercise
+    
+    @ManyToOne(()=>Machine,(machine)=>machine.activities)
+    machine:Machine
 
     @Column()
     reps:number;
@@ -32,10 +36,6 @@ export class Activity {
     @ManyToOne(()=>User,(user)=>user.activities)
     user:User
 
-    @ManyToOne(()=>Machine,(machine)=>machine.activities)
-    machine:Machine
 
-    @ManyToOne(()=>Exercise,(exercise)=>exercise.activity)
-    exercise:Exercise
 }
 

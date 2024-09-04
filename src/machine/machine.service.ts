@@ -29,18 +29,18 @@ export class MachineService {
   }
 
   async findAll() {
-    return  await this.machineRepository.find({relations:['machineCategory']})
+    return  await this.machineRepository.find({relations:['machineCategory','activities']})
     
   }
 
   async findOne(id: number) {
-    const machine = await this.machineRepository.findOne({where:{id},relations:['machineCategory']})
+    const machine = await this.machineRepository.findOne(
+      {where:{id},relations:['machineCategory','activities']}
+    )
     if(!machine){
       throw new NotFoundException(`Machine with ${id} not found`)
     }
-    return machine
-
-    
+    return machine;
   }
 
   async update(id: number, updateMachineDto: UpdateMachineDto) {
