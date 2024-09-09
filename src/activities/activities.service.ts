@@ -8,7 +8,13 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Activity } from './entities/activity.entity';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import {
+  Between,
+  LessThanOrEqual,
+  
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 import { MachineService } from 'src/machine/machine.service';
 import { UsersService } from 'src/users/users.service';
 import { ExercisesService } from 'src/exercises/exercises.service';
@@ -63,7 +69,7 @@ export class ActivitiesService {
 
     if (findDisponibilty) {
       throw new ConflictException(
-        `You cannot create an activity with this machine ID: ${createActivityDto.machineId} - ${machine.name} because it was being used at this date`,
+        `You cannot create an activity with this machine ID: ${createActivityDto.machineId}-${machine.name} because it was being used at this date`,
       );
     }
 
@@ -79,11 +85,23 @@ export class ActivitiesService {
   }
 
   async findAll() {
-    return await this.activityRepository.find({
-      relations: ['machine', 'exercise', 'user'],
+    return this.activityRepository.find();
+  }
+  async findAllByWeek(id:number){
+    const currentlyWeek = new Date();
+    currentlyWeek.setDate(currentlyWeek.getDate()-7)
+    const endOfCurrentlyWeek = new Date();
+    endOfCurrentlyWeek.setDate(endOfCurrentlyWeek.getDate() );
+    console.log(currentlyWeek)
+    
+    return this.activityRepository.find({
+      where: {
+        user:{id:id},
+        start_date: MoreThanOrEqual(currentlyWeek),
+        end_date:LessThanOrEqual(endOfCurrentlyWeek)
+      },
     });
   }
-
   async findOne(id: number) {
     const activity = await this.activityRepository.findOne({
       where: { id },
@@ -94,7 +112,19 @@ export class ActivitiesService {
     }
     return activity;
   }
-
+  async orderByLastWeek() {
+    const now = new Date();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(now.getDate() - 7);
+    console.log('Now:', now);
+    console.log('One Week Ago:', oneWeekAgo);
+    return await this.activityRepository.find({
+      where: {
+        start_date: Between(oneWeekAgo, now),
+        end_date: Between(oneWeekAgo, now),
+      },
+    });
+  }
   async update(id: number, updateActivityDto: UpdateActivityDto) {
     const machine = await this.machineService.findOne(
       updateActivityDto.machineId,

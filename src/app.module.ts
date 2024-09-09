@@ -9,7 +9,6 @@ import { ActivitiesModule } from './activities/activities.module';
 import { MachineCategoryModule } from './machine_category/machine_category.module';
 import { MachineModule } from './machine/machine.module';
 import { AuthModule } from './auth/auth.module'
-
 import { ExercisesModule } from './exercises/exercises.module';
 
 

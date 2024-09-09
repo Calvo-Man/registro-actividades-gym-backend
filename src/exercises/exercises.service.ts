@@ -5,19 +5,22 @@ import { UpdateExerciseDto } from './dto/update-exercise.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Exercise } from './entities/exercise.entity';
 import { Repository } from 'typeorm';
-import { MachineService } from 'src/machine/machine.service';
+//import { MachineService } from 'src/machine/machine.service';
+import { MachineCategoryService } from 'src/machine_category/machine_category.service';
 
 @Injectable()
 export class ExercisesService {
   constructor(
     @InjectRepository (Exercise) private exerciseRepository:Repository<Exercise>,
-    private machineCategoryService:MachineService
+    private machineCategoryService:MachineCategoryService
   ){}
   async create(createExerciseDto: CreateExerciseDto) {
-    const machineCategory = await this.machineCategoryService.findOne(createExerciseDto.machineCategoryId)
+    
+    const machine_category:any= createExerciseDto.machineCategory;
+    const machineCategory = await this.machineCategoryService.findOne(machine_category)
 
     if(!machineCategory){
-      throw new NotFoundException(`Category with ID ${createExerciseDto.machineCategoryId} not found`)
+      throw new NotFoundException(`Category with ID ${createExerciseDto.machineCategory} not found`)
     }
     const exercise =  this.exerciseRepository.create({...CreateExerciseDto,machineCategory})
 
@@ -25,7 +28,7 @@ export class ExercisesService {
   }
 
   async findAll() {
-   return await this.exerciseRepository.find({relations:['machinecategory']})
+   return await this.exerciseRepository.find({relations:['machineCategory']})
     
   }
 
@@ -42,10 +45,11 @@ export class ExercisesService {
   }
 
   async update(id: number, updateExerciseDto: UpdateExerciseDto) {
-    const machineCategory = await this.machineCategoryService.findOne(updateExerciseDto.machineCategoryId)
+    const machine_category:any= updateExerciseDto.machineCategory;
+    const machineCategory = await this.machineCategoryService.findOne(machine_category)
 
     if(!machineCategory){
-      throw new NotFoundException(`Category with ID ${updateExerciseDto.machineCategoryId} not found`)
+      throw new NotFoundException(`Category with ID ${updateExerciseDto.machineCategory} not found`)
     }
     const exercise = await this.exerciseRepository.preload({
       id,...updateExerciseDto,machineCategory

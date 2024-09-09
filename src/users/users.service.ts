@@ -8,11 +8,15 @@ import { Repository } from 'typeorm';
 import { RolesService } from 'src/roles/roles.service';
 
 
+
+
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository (User) private userRepository:Repository<User>,
     private rolesService:RolesService,
+    
+ 
   ){}
   async create(createUserDto: CreateUserDto) {
     return await this.userRepository.save(createUserDto);
@@ -30,6 +34,8 @@ export class UsersService {
     return findUsers;
   }
 
+  
+
    async findOne(id: number) {
     const findUser = await this.userRepository.findOne(
       {where:{id},relations:['role']}
@@ -43,11 +49,20 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string) {
-    return await this.userRepository.findOneBy({ email });
+    return await this.userRepository.findOne(
+      {where:{email},relations:['activities']}
+    );
   }
-
+  async findActivities(email:string){
+    const user = await this.findOneByEmail(email);
+    if(!user){
+      throw new NotFoundException(`User with email ${email} not found`)
+    }
+    return user.activities
+  }
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const role = await this.rolesService.findOne(updateUserDto.roleId);
+    const rol:any= updateUserDto.role;
+    const role = await this.rolesService.findOne(rol);
     if(!role){
       throw new NotFoundException(`Rol with ID ${id} not found`)
     };

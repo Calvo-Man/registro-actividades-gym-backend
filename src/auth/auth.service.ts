@@ -16,28 +16,22 @@ export class AuthService {
   constructor(private readonly usersService: UsersService,
   private readonly jwtService: JwtService
   ) {}
-  
+  async register(registerDto: RegisterDto) {
 
-  async register({ password, email, name,age,weight,height,roleId }: RegisterDto) {
-    const user = await this.usersService.findOneByEmail(email);
+    const rol:any= registerDto.role;
+
+    const user = await this.usersService.findOneByEmail(registerDto.email);
 
     if (user) {
       throw new BadRequestException('Email already exists');
     }
-
-    const hashedPassword = await bcryptjs.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(registerDto.password, 10);
 
     await this.usersService.create({
-      email,
-      name,
+     ...registerDto,
       password: hashedPassword,
-      age,
-      weight,
-      height,
-      roleId
+      role:rol
     })
-
-
 
     return {
       message: 'User created successfully',
@@ -62,6 +56,8 @@ export class AuthService {
     return {
       token: token,
       email: user.email,
+      id:user.id,
+      rol:user.role
     };
   }
 }

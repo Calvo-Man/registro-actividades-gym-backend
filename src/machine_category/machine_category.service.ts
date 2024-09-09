@@ -28,8 +28,12 @@ export class MachineCategoryService {
     if(!category){
       throw new NotFoundException(`Machine category with ${id} not found`)
     }
-
     return category;
+  }
+
+  async findOneByCategory(category:string){
+    console.log(category)
+    return await this.machineCategoryRepository.findOne({where:{category},relations:['machine']})
   }
 
   async update(id: number, updateMachineCategoryDto: UpdateMachineCategoryDto) {

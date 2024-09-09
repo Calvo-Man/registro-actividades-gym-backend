@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Transform } from "class-transformer";
-import { IsEmail, IsNumber, IsString, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumber, IsString, MinLength } from "class-validator";
 
 export class RegisterDto {
   @IsString()
@@ -16,14 +16,18 @@ export class RegisterDto {
   password: string;
 
   @IsNumber()
+  @IsNotEmpty()
   age:number
 
   @IsNumber()
+  @IsNotEmpty()
   weight:number
 
   @IsNumber()
+  @IsNotEmpty()
   height:number
 
   @IsNumber()
-  roleId:number
+  @IsNotEmpty()
+  role:number
 }

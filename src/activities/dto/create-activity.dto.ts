@@ -3,8 +3,6 @@ import { Type } from "class-transformer";
 import {IsDate, IsNotEmpty, IsNumber } from "class-validator";
 
 export class CreateActivityDto {
-
-    
     
     @IsNotEmpty()
     @IsNumber()
@@ -23,9 +21,6 @@ export class CreateActivityDto {
     @Type(() => Date)
     @IsDate()
     end_date:Date;
-
-    
-    
 
     @IsNotEmpty()
     @IsNumber()

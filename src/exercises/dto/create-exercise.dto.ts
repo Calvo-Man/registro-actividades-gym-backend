@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { IsNotEmpty, IsString } from "class-validator";
+import { MachineCategory } from "src/machine_category/entities/machine_category.entity";
 
 export class CreateExerciseDto {
     @IsNotEmpty()
@@ -9,6 +10,6 @@ export class CreateExerciseDto {
 
     @IsNotEmpty()
     @IsString()
-    machineCategoryId:number
+    machineCategory:MachineCategory
 
 }

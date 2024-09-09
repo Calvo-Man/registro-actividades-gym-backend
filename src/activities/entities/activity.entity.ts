@@ -33,7 +33,7 @@ export class Activity {
     @Column({nullable:true})
     duration:number
 
-    @ManyToOne(()=>User,(user)=>user.activities)
+    @ManyToOne(()=>User,(user)=>user.activities,{ eager: true })
     user:User
 
 
