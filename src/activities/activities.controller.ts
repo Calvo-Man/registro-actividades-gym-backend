@@ -1,13 +1,20 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-//import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('activities')
-
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
 
@@ -21,14 +28,29 @@ export class ActivitiesController {
   findOne(@Param('id') id: string) {
     return this.activitiesService.findOne(+id);
   }
- 
- @Get('user/:id')
- findAllByWeek(@Param('id') id:string){
-  return this.activitiesService.findAllByWeek(+id);
- }
+  @Get('user/:id')
+  findAllByWeek(@Param('id') id: string) {
+    return this.activitiesService.findAllByWeek(+id);
+  }
+  @Get('user/:id/machine/:idMachine')
+  findByWeekPerMachine(
+    @Param('id') id: string,
+    @Param('idMachine') idMachine: string,
+  ) {
+    return this.activitiesService.findByWeekPerMachine(+id, +idMachine);
+  }
+
   
+  @Get('user/:id/weekly')
+  getActivitiesGroupedByWeek() {
+    return this.activitiesService.getActivitiesGroupedByWeek();
+  }
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateActivityDto: UpdateActivityDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateActivityDto: UpdateActivityDto,
+  ) {
     return this.activitiesService.update(+id, updateActivityDto);
   }
 
