@@ -87,6 +87,23 @@ export class ActivitiesService {
   async findAll() {
     return this.activityRepository.find();
   }
+  async findAllByDay(id:number){
+    
+    const currentlyDay = new Date();
+    currentlyDay.setDate(currentlyDay.getDate()-1)
+    console.log(currentlyDay)
+    const endOfCurrentlyDay = new Date();
+    endOfCurrentlyDay.setDate(endOfCurrentlyDay.getDate() +1);
+    
+    return this.activityRepository.find({
+      where: {
+        user:{id:id},
+        start_date: MoreThanOrEqual(currentlyDay),
+        end_date:LessThanOrEqual(endOfCurrentlyDay)
+      },
+      relations:['machine']
+    });
+  }
   async findAllByWeek(id:number){
     const currentlyWeek = new Date();
     currentlyWeek.setDate(currentlyWeek.getDate()-7)
@@ -96,7 +113,6 @@ export class ActivitiesService {
     return this.activityRepository.find({
       where: {
         user:{id:id},
-       
         start_date: MoreThanOrEqual(currentlyWeek),
         end_date:LessThanOrEqual(endOfCurrentlyWeek)
       },
@@ -107,7 +123,7 @@ export class ActivitiesService {
     const currentlyWeek = new Date();
     currentlyWeek.setDate(currentlyWeek.getDate()-7)
     const endOfCurrentlyWeek = new Date();
-    endOfCurrentlyWeek.setDate(endOfCurrentlyWeek.getDate() );
+    endOfCurrentlyWeek.setDate(endOfCurrentlyWeek.getDate() +1);
     
     return this.activityRepository.find({
       where: {
@@ -124,8 +140,8 @@ export class ActivitiesService {
       .createQueryBuilder('activity')
       .select('WEEK(activity.start_date)', 'week_number')
       .addSelect('YEAR(activity.start_date)', 'year')
-      .addSelect('SUM(activity.reps)', 'total_reps')
-      .addSelect('SUM(activity.duration)', 'total_duration')
+      .addSelect('SUM(activity.reps)', 'reps')
+      .addSelect('SUM(activity.duration)', 'duration')
       .groupBy('YEAR(activity.start_date)')
       .addGroupBy('WEEK(activity.start_date)')
       .orderBy('YEAR(activity.start_date)', 'ASC')

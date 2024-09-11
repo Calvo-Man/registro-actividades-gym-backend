@@ -28,10 +28,17 @@ export class ActivitiesController {
   findOne(@Param('id') id: string) {
     return this.activitiesService.findOne(+id);
   }
+
   @Get('user/:id')
   findAllByWeek(@Param('id') id: string) {
     return this.activitiesService.findAllByWeek(+id);
   }
+  
+  @Get('user/:id/today')
+  findAllByDay(@Param('id') id: string) {
+    return this.activitiesService.findAllByDay(+id);
+  }
+
   @Get('user/:id/machine/:idMachine')
   findByWeekPerMachine(
     @Param('id') id: string,
