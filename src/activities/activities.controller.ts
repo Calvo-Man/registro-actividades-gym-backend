@@ -24,11 +24,23 @@ export class ActivitiesController {
     return this.activitiesService.create(createActivityDto);
   }
 
+  @Get()
+  findAll() {
+    return this.activitiesService.findAll();
+  }
+
+  @Get('ranking/lifted-weight')
+  async findTopFiveUsersByWeightLifted() {
+    return await this.activitiesService.findTopThreeUsersByWeightLifted();
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.activitiesService.findOne(+id);
   }
-
+  @Get('user/:id/all')
+  async findAllByUser(@Param('id') id:string){
+    return await this.activitiesService.findAllByUser(+id);
+  }
   @Get('user/:id')
   findAllByWeek(@Param('id') id: string) {
     return this.activitiesService.findAllByWeek(+id);

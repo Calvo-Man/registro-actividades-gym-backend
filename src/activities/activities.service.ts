@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
@@ -11,13 +12,13 @@ import { Activity } from './entities/activity.entity';
 import {
   Between,
   LessThanOrEqual,
-  
   MoreThanOrEqual,
   Repository,
 } from 'typeorm';
 import { MachineService } from 'src/machine/machine.service';
 import { UsersService } from 'src/users/users.service';
 import { ExercisesService } from 'src/exercises/exercises.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Injectable()
 export class ActivitiesService {
@@ -28,6 +29,8 @@ export class ActivitiesService {
     private userService: UsersService,
     private exerciseService: ExercisesService,
   ) {}
+
+  @UseGuards(AuthGuard)
   async create(createActivityDto: CreateActivityDto) {
     const machine = await this.machineService.findOne(
       createActivityDto.machineId,
@@ -54,6 +57,7 @@ export class ActivitiesService {
 
     const startDate = new Date(createActivityDto.start_date);
     const endDate = new Date(createActivityDto.end_date);
+    
     const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
     const diffHours = diffTime / (1000 * 60);
 
@@ -72,7 +76,9 @@ export class ActivitiesService {
         `You cannot create an activity with this machine ID: ${createActivityDto.machineId}-${machine.name} because it was being used at this date`,
       );
     }
-
+    if(createActivityDto.start_date >= createActivityDto.end_date){
+      throw new ConflictException(`The start date cannot be greater than the end date`)  
+    }
     const activity = this.activityRepository.create({
       ...createActivityDto,
       machine,
@@ -87,10 +93,35 @@ export class ActivitiesService {
   async findAll() {
     return this.activityRepository.find();
   }
+  async findTopThreeUsersByWeightLifted() {
+  return this.activityRepository
+    .createQueryBuilder('activity')
+    .select('activity.user.id', 'userId')
+    .addSelect('SUM(activity.lifted_weight)', 'totalWeight')
+    .innerJoin('activity.user', 'user') // Add this line to join the user entity
+    .addSelect('user.name', 'userName')
+    .groupBy('activity.user.id')
+    .orderBy('totalWeight', 'DESC')
+    .limit(3) // Change this to 5 instead of 3
+    .getRawMany();
+}
+  async findAllByUser(id: number) {
+    return this.activityRepository.find({
+      where: {
+        user: {id:id},
+
+      },
+      order:{
+        start_date:'DESC'
+      },
+      relations: ['machine','exercise'],
+
+    })
+  }
   async findAllByDay(id:number){
     
     const currentlyDay = new Date();
-    currentlyDay.setDate(currentlyDay.getDate()-1)
+    currentlyDay.setDate(currentlyDay.getDate())
     console.log(currentlyDay)
     const endOfCurrentlyDay = new Date();
     endOfCurrentlyDay.setDate(endOfCurrentlyDay.getDate() +1);

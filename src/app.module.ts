@@ -12,6 +12,8 @@ import { AuthModule } from './auth/auth.module'
 import { ExercisesModule } from './exercises/exercises.module';
 
 
+
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -32,6 +34,7 @@ import { ExercisesModule } from './exercises/exercises.module';
     MachineModule,
     AuthModule,
     ExercisesModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService],

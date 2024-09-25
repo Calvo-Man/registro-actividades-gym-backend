@@ -40,11 +40,18 @@ export class User {
     type: 'timestamp',
   })
   createdAt: Date;
+
   @BeforeInsert()
   setCreatedAt() {
     // Configura la zona horaria a la que quieres convertir
     this.createdAt = moment().tz('America/Bogota').toDate();
   }
+  @Column({type:'boolean',default:false})
+  active:boolean
+
+  @Column({type:'uuid',unique:true,default:null})
+  activationToken:string
+
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
 

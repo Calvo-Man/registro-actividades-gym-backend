@@ -4,6 +4,7 @@ import {IsDate, IsNotEmpty, IsNumber } from "class-validator";
 
 export class CreateActivityDto {
     
+    
     @IsNotEmpty()
     @IsNumber()
     reps: number;

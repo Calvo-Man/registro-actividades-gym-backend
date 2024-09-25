@@ -7,6 +7,7 @@ import { Activity } from './entities/activity.entity';
 import { MachineModule } from 'src/machine/machine.module';
 import { UsersModule } from 'src/users/users.module';
 import { ExercisesModule } from 'src/exercises/exercises.module';
+//import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports:[

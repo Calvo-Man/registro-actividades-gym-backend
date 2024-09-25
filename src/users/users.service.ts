@@ -7,16 +7,11 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { RolesService } from 'src/roles/roles.service';
 
-
-
-
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository (User) private userRepository:Repository<User>,
     private rolesService:RolesService,
-    
- 
   ){}
   async create(createUserDto: CreateUserDto) {
     return await this.userRepository.save(createUserDto);
@@ -34,8 +29,6 @@ export class UsersService {
     return findUsers;
   }
 
-  
-
    async findOne(id: number) {
     const findUser = await this.userRepository.findOne(
       {where:{id},relations:['role']}
@@ -50,7 +43,7 @@ export class UsersService {
 
   async findOneByEmail(email: string) {
     return await this.userRepository.findOne(
-      {where:{email},relations:['activities']}
+      {where:{email},relations:['role']}
     );
   }
   async findActivities(email:string){
